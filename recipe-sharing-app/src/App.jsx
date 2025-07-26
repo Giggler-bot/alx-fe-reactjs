@@ -1,54 +1,38 @@
-// import { Routes, Route } from 'react-router-dom';
-// import RecipeList from './components/RecipeList';
-// import RecipeDetails from './components/RecipeDetails';
-// import EditRecipeForm from './components/EditRecipeForm';
-// import AddRecipeForm from './components/AddRecipeForm';
-
-// function App() {
-//   return (
-//     <div>
-//       <h1>Recipe Sharing App</h1>
-//       <AddRecipeForm />
-
-//       <Routes>
-//         <Route path="/" element={<RecipeList />} />
-//         <Route path="/recipe/:id" element={<RecipeDetails />} />
-//         <Route path="/recipe/:id/edit" element={<EditRecipeForm />} />
-//       </Routes>
-//     </div>
-//   );
-// }
-
-// export default App;
-
-
+import './App.css'; // Keep your CSS import
+import RecipeList from './components/RecipeList';
+import AddRecipeForm from './components/AddRecipeForm';
 import { Link } from 'react-router-dom';
-const App = () => {
-  const recipes = useRecipeStore((state) => state.recipes);
-  const addRecipe = useRecipeStore((state) => state.addRecipe);
 
-  const handleAdd = () => {
-    const title = prompt('Recipe Title:');
-    const description = prompt('Recipe Description:');
-    if (title && description) {
-      addRecipe({ title, description });
-    }
-  };
-
+function App() {
   return (
-    <div>
-      <h1>Recipe Sharing App</h1>
-      <button onClick={handleAdd}>Add Recipe</button>
+    <div style={{ fontFamily: 'Arial, sans-serif', padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+      <h1>Recipe Sharing Application</h1>
 
-      <ul>
-        {recipes.map((r) => (
-          <li key={r.id}>
-            <Link to={`/recipe/${r.id}`}>{r.title}</Link>
-          </li>
-        ))}
-      </ul>
+      <nav style={{ marginBottom: '20px' }}>
+        <Link to="/" style={{ marginRight: '15px', textDecoration: 'none', color: '#007bff', fontWeight: 'bold' }}>Home</Link>
+        {/* You can add other global navigation links here if desired */}
+      </nav>
+
+      {/*
+        Routes and Route components can be used here if App.jsx
+        is responsible for managing its *own* sub-routes within its scope,
+        but typically, if main.jsx handles all top-level routes,
+        App.jsx (when rendered as an element of a route) will just
+        render its content.
+
+        Given the previous setup where App.jsx had its own Routes,
+        we need to *remove* the Routes block from here now that main.jsx
+        is managing top-level routes.
+      */}
+
+      {/* When App.jsx is rendered by the '/' route in main.jsx,
+          it should just display the main components for the home page. */}
+      <AddRecipeForm />
+      <RecipeList />
+
+      {/* No Routes block here anymore */}
     </div>
   );
-};
+}
 
 export default App;
