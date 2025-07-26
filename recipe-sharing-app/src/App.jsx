@@ -1,7 +1,7 @@
 import './App.css'; // Keep your CSS import
 import RecipeList from './components/RecipeList';
 import AddRecipeForm from './components/AddRecipeForm';
-import { Link } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 
 function App() {
   return (
@@ -12,6 +12,9 @@ function App() {
         <Link to="/" style={{ marginRight: '15px', textDecoration: 'none', color: '#007bff', fontWeight: 'bold' }}>Home</Link>
         {/* You can add other global navigation links here if desired */}
       </nav>
+      <Routes>
+        <Route path="/" element={<><AddRecipeForm /><RecipeList /></>} />
+      </Routes>
 
       {/*
         Routes and Route components can be used here if App.jsx
@@ -27,8 +30,7 @@ function App() {
 
       {/* When App.jsx is rendered by the '/' route in main.jsx,
           it should just display the main components for the home page. */}
-      <AddRecipeForm />
-      <RecipeList />
+      
 
       {/* No Routes block here anymore */}
     </div>
