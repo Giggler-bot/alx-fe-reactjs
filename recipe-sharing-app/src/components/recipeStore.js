@@ -1,21 +1,19 @@
 import { create } from 'zustand';
 
-export const useRecipeStore = create((set) => ({
+const useRecipeStore = create(set => ({
   recipes: [],
-  addRecipe: (newRecipe) =>
-    set((state) => ({ 
-      recipes: [...state.recipes, newRecipe] })),
-  setRecipes: (recipes) => set({ recipes }),
-  
-  updateRecipe: (updatedRecipe) =>
-    set((state) => ({
-      recipes: state.recipes.map((recipe) =>
-        recipe.id === updatedRecipe.id ? updatedRecipe : recipe
-      ),
-    })),
-  deleteRecipe: (recipeId) =>
-    set((state) => ({
-      recipes: state.recipes.filter((recipe) => recipe.id !== recipeId)
-    })),
+  addRecipe: (newRecipe) => set(state => ({
+    recipes: [...state.recipes, newRecipe]
+  })),
+  setRecipes: (recipes) => set({ recipes }), // This action is for initial setup or replacing
+  deleteRecipe: (id) => set(state => ({
+    recipes: state.recipes.filter(recipe => recipe.id !== id) // Remove recipe by ID
+  })),
+  updateRecipe: (updatedRecipe) => set(state => ({
+    recipes: state.recipes.map(recipe =>
+      recipe.id === updatedRecipe.id ? updatedRecipe : recipe // Replace the old recipe with the updated one
+    )
+  }))
 }));
 
+export { useRecipeStore };
