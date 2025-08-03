@@ -29,3 +29,8 @@ export const searchUsers = async (query, location, minRepos) => {
     throw new Error("An error occurred during the search.");
   }
 };
+
+export const fetchUserData = () => {
+    console.log("Hero");
+    
+}
