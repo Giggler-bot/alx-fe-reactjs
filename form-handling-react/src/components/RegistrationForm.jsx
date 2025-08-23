@@ -67,3 +67,4 @@ export default function RegistrationForm({ onRegister }) {
     </form>
   );
 }
+ ["value={username}", "value={email}", "value={password}"]
