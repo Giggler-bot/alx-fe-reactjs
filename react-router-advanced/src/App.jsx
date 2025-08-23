@@ -1,74 +1,85 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Link, Navigate, Outlet, useParams } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+} from "react-router-dom";
 
-const fakeAuth = {
-  isAuthenticated: false,
-  login(cb) { this.isAuthenticated = true; setTimeout(cb, 100); },
-  logout(cb) { this.isAuthenticated = false; setTimeout(cb, 100); }
-};
+import ProtectedRoute from "./components/ProtectedRoute";
+import BlogPost from "./components/BlogPost";
+
+// If you already created these earlier, keep them.
+// Otherwise, you can temporarily stub them or adjust imports.
+import Profile from "./components/Profile"; // must exist from your nested routes task
+import ProfileDetails from "./components/ProfileDetails";
+import ProfileSettings from "./components/ProfileSettings";
 
 function Home() {
   return <div><h2>Home</h2><p>Welcome.</p></div>;
 }
 
-function Login() {
+function Login({ onLogin }) {
+  const navigate = useNavigate();
   const handleLogin = () => {
-    fakeAuth.login(() => window.location.href = "/profile");
+    onLogin(true);
+    navigate("/profile", { replace: true });
   };
-  return <div><h2>Login</h2><button onClick={handleLogin}>Login (mock)</button></div>;
-}
-
-function ProtectedRoute({ children }) {
-  if (!fakeAuth.isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-  return children;
-}
-
-/* Profile with nested routes */
-function Profile() {
   return (
-    <div>
-      <h2>Profile</h2>
-      <nav>
-        <Link to="details">Details</Link> | <Link to="settings">Settings</Link>
-      </nav>
-      <Outlet />
+    <div style={{ padding: 16 }}>
+      <h2>Login</h2>
+      <button onClick={handleLogin}>Login (mock)</button>
     </div>
   );
 }
-function ProfileDetails() { return <div><h3>Profile Details</h3></div>; }
-function ProfileSettings() { return <div><h3>Profile Settings</h3></div>; }
 
-/* Dynamic route example: blog post */
-function Post() {
-  const { postId } = useParams();
-  return <div><h2>Post {postId}</h2><p>Dynamic route content for post {postId}</p></div>;
-}
+export default function App() {
+  // super simple auth state; persist in localStorage to survive reloads
+  const [isAuthed, setIsAuthed] = React.useState(
+    () => localStorage.getItem("authed") === "true"
+  );
+  React.useEffect(() => {
+    localStorage.setItem("authed", String(isAuthed));
+  }, [isAuthed]);
 
-export default function AppRouter() {
   return (
     <BrowserRouter>
-      <header>
-        <Link to="/">Home</Link> | <Link to="/profile">Profile</Link> | <Link to="/posts/42">Post 42</Link> | <Link to="/login">Login</Link>
+      <header style={{ display: "flex", gap: 12, padding: 12, borderBottom: "1px solid #eee" }}>
+        <Link to="/">Home</Link>
+        <Link to="/profile">Profile (Protected)</Link>
+        <Link to="/blog/42">Blog 42</Link>
+        <Link to="/login">Login</Link>
+        {isAuthed && (
+          <button onClick={() => setIsAuthed(false)} style={{ marginLeft: "auto" }}>
+            Logout
+          </button>
+        )}
       </header>
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
 
-        <Route path="/profile" element={
-          <ProtectedRoute><Profile /></ProtectedRoute>
-        }>
+        {/* Protected profile with nested routes already implemented */}
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthed} redirectTo="/login">
+              <Profile />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<ProfileDetails />} />
           <Route path="details" element={<ProfileDetails />} />
           <Route path="settings" element={<ProfileSettings />} />
-          {/* default nested route */}
-          <Route index element={<ProfileDetails />} />
         </Route>
 
-        <Route path="/posts/:postId" element={<Post />} />
+        {/* Dynamic route: /blog/:id -> BlogPost */}
+        <Route path="/blog/:id" element={<BlogPost />} />
 
-        <Route path="*" element={<div>404 Not Found</div>} />
+        <Route path="/login" element={<Login onLogin={setIsAuthed} />} />
+
+        <Route path="*" element={<div style={{ padding: 16 }}>404 Not Found</div>} />
       </Routes>
     </BrowserRouter>
   );
