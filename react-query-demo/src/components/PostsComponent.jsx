@@ -39,3 +39,6 @@ export default function PostsComponent() {
     </div>
   );
 }
+
+
+["refetchOnWindowFocus", "keepPreviousData"]
