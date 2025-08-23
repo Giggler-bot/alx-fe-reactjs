@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-
+import React from "react";
 const RecipeCard = ({ recipe }) => {
   return (
     <article className="border rounded-lg shadow p-4 bg-white transition hover:shadow-lg">
