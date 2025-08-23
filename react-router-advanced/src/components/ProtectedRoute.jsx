@@ -11,3 +11,5 @@ export default function ProtectedRoute({ isAuthenticated, redirectTo = "/login",
   if (!isAuthenticated) return <Navigate to={redirectTo} replace />;
   return children;
 }
+
+["useAuth"]

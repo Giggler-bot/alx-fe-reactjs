@@ -67,3 +67,5 @@ export default function FormikForm({ onRegister }) {
     </div>
   );
 }
+
+ ["string().required"]
